@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Fire
   layers:
   - Default
   - TransparentFX
@@ -43,4 +44,7 @@ TagManager:
     locked: 0
   - name: Character
     uniqueID: 3492971513
+    locked: 0
+  - name: Fire
+    uniqueID: 2912210699
     locked: 0
