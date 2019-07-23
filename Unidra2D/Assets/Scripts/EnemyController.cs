@@ -8,8 +8,8 @@ public class EnemyController : MonoBehaviour
     public Transform areaTopLeft;
     public Transform areaBottomRight;
     public GameObject firePrefab;
-    public float minTime = 1f;
-    public float maxTime = 2f;
+    public float minTime = 0.2f;
+    public float maxTime = 5f;
 
     IEnumerator Attack()
     {
