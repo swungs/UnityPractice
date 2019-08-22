@@ -5,19 +5,61 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     //변수 선언
-    public float moveSpeed = 5f;
+    public float moveSpeed = 5f;         // 이동 속도
+    public float jumpPower = 350f;    // 점프 속도
+
+    public float MaxHP = 3f;    // 최대 생명력
+    public float HP = 3f;       // 현재 생명력
+
+    bool grounded = false;      // 땅에 닿아 있는지 여부
+
+    new Rigidbody2D rigidbody2D;
+
 
     // Start is called before the first frame update
     void Start()
     {
-
+        rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // d키 입력하면 오른쪽으로 움직임
-        if (Input.GetKey(KeyCode.D) == true)
+    }
+
+    // Physics engine Updates
+    // 정확한 시간 단위로 업데이트된다고 하는데..? 잘 모르겠다
+    void FixedUpdate()
+    {
+        GroundedUpdater();
+        Move();
+        Jump();
+    }
+
+    // 땅에 닿았는지 체크
+    void GroundedUpdater()
+    {
+        grounded = false; //Set to false every frame by default
+        RaycastHit2D[] hit;
+        hit = Physics2D.RaycastAll(transform.position, Vector2.down, 0.2f);
+        // you can increase RaycastLength and adjust direction for your case
+        foreach (var hited in hit)
+        {
+            if (hited.collider.gameObject == gameObject) //Ignore my character
+                continue;
+            // Don't forget to add tag to your ground
+            if (hited.collider.gameObject.tag == "Ground")
+            { //Change it to match ground tag
+                Debug.Log("groundcheck");
+                grounded = true;
+            }
+        }
+    }
+
+    void Move()
+    {      
+        // 방향키 입력하면 오른쪽으로 움직임
+        if (Input.GetKey(KeyCode.RightArrow))
         {
             transform.Translate(Vector3.right * moveSpeed * Time.deltaTime);
             Vector3 local_scale = transform.localScale;
@@ -28,8 +70,8 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        // a키 입력하면 왼쪽으로 움직임
-        if (Input.GetKey(KeyCode.A) == true)
+        // 방향키 입력하면 왼쪽으로 움직임
+        if (Input.GetKey(KeyCode.LeftArrow))
         {
             transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
             Vector3 local_scale = transform.localScale;
@@ -39,15 +81,29 @@ public class PlayerController : MonoBehaviour
                 transform.localScale = local_scale;
             }
         }
-        /*
-        // 스페이스키 입력하면 점프
-        if (Input.GetKey(KeyCode.Space) == true)
-        {
-            transform.Translate(Vector3.up * moveSpeed * 2 * Time.deltaTime);
-        }
-        넣었더니 바닥으로 떨어짐 ㅎ.ㅠ
-        */
+
     }
+
+    void Jump()
+    {
+
+        if (!grounded)
+            return;
+
+        // 스페이스키 입력하면 점프
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            // prevent velocity amplification(?)
+            rigidbody2D.velocity = Vector2.zero;
+
+            Vector2 jumpVelocity = new Vector2(0, jumpPower);
+            rigidbody2D.AddForce(jumpVelocity, ForceMode2D.Impulse);
+
+            grounded = false;
+        }
+    }
+
+
 
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -56,6 +112,11 @@ public class PlayerController : MonoBehaviour
         {
             Animator myAnimator = GetComponent<Animator>();
             myAnimator.SetTrigger("Damage");
+            HP--;
+            if(HP<=0)
+            {
+                // gameover
+            }
         }
     }
 }
