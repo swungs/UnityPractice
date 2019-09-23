@@ -4,15 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    //변수 선언
-    public float moveSpeed = 5f;         // 이동 속도
-    public float jumpPower = 350f;    // 점프 속도
-
-    public float MaxHP = 3f;    // 최대 생명력
-    public float HP = 3f;       // 현재 생명력
-
     bool grounded = false;      // 땅에 닿아 있는지 여부
-
     new Rigidbody2D rigidbody2D;
 
 
@@ -50,7 +42,6 @@ public class PlayerController : MonoBehaviour
             // Don't forget to add tag to your ground
             if (hited.collider.gameObject.tag == "Ground")
             { //Change it to match ground tag
-                Debug.Log("groundcheck");
                 grounded = true;
             }
         }
@@ -61,7 +52,7 @@ public class PlayerController : MonoBehaviour
         // 방향키 입력하면 오른쪽으로 움직임
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            transform.Translate(Vector3.right * moveSpeed * Time.deltaTime);
+            transform.Translate(Vector3.right * PlayerStats.Instance.MoveSpeed * Time.deltaTime);
             Vector3 local_scale = transform.localScale;
             if (local_scale.x < 0)
             {
@@ -73,7 +64,7 @@ public class PlayerController : MonoBehaviour
         // 방향키 입력하면 왼쪽으로 움직임
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
+            transform.Translate(Vector3.left * PlayerStats.Instance.MoveSpeed * Time.deltaTime);
             Vector3 local_scale = transform.localScale;
             if (local_scale.x > 0)
             {
@@ -86,7 +77,6 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-
         if (!grounded)
             return;
 
@@ -96,27 +86,33 @@ public class PlayerController : MonoBehaviour
             // prevent velocity amplification(?)
             rigidbody2D.velocity = Vector2.zero;
 
-            Vector2 jumpVelocity = new Vector2(0, jumpPower);
+            Vector2 jumpVelocity = new Vector2(0, PlayerStats.Instance.JumpPower);
             rigidbody2D.AddForce(jumpVelocity, ForceMode2D.Impulse);
 
             grounded = false;
         }
     }
 
-
-
     void OnCollisionEnter2D(Collision2D collision)
     {
         // 부딪힌 녀석에 fire 태그가 있다면 플레이어 애니메이터 컴포넌트의 대미지 트리거를 불러준다.
-        if(collision.gameObject.tag == "Fire")
+        if (collision.gameObject.tag == "Fire")
         {
             Animator myAnimator = GetComponent<Animator>();
             myAnimator.SetTrigger("Damage");
-            HP--;
-            if(HP<=0)
+
+            PlayerStats.Instance.TakeDamage(1);
+
+            if (PlayerStats.Instance.Health <= 0)
             {
                 // gameover
             }
         }
     }
+
+    // hp 추가, 회복, 대미지 처리
+    //PlayerStats.Instance.AddHealth();
+    //PlayerStats.Instance.Heal(health);
+    //PlayerStats.Instance.TakeDamage(dmg);
+
 }
