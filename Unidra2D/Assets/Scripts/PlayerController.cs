@@ -102,11 +102,6 @@ public class PlayerController : MonoBehaviour
             myAnimator.SetTrigger("Damage");
 
             PlayerStats.Instance.TakeDamage(1);
-
-            if (PlayerStats.Instance.Health <= 0)
-            {
-                // gameover
-            }
         }
     }
 

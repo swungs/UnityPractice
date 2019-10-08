@@ -21,6 +21,8 @@ public class ChangeSceneManager : MonoBehaviour
     public void ChangeGameScene()
     {
         SceneManager.LoadScene("MainGame");
+        Time.timeScale = 1.0f;
     }
+
 
 }

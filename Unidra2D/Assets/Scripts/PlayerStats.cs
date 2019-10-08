@@ -8,6 +8,7 @@ public class PlayerStats : MonoBehaviour
 {
     public delegate void OnHealthChangedDelegate();
     public OnHealthChangedDelegate onHealthChangedCallback;
+    public GameObject GameManager;
 
     #region Sigleton
     private static PlayerStats instance;
@@ -23,15 +24,15 @@ public class PlayerStats : MonoBehaviour
     #endregion
 
     [SerializeField]
-    private float health;
+    private float health = 2;
     [SerializeField]
-    private float maxHealth;
+    private float maxHealth = 3;
     [SerializeField]
-    private float maxTotalHealth;
+    private float maxTotalHealth = 10;
     [SerializeField]
-    private float moveSpeed;// 이동 속도
+    private float moveSpeed = 5;// 이동 속도
     [SerializeField]
-    private float jumpPower; // 점프 속도
+    private float jumpPower = 1; // 점프 속도
 
     public float Health { get { return health; } }
     public float MaxHealth { get { return maxHealth; } }
@@ -41,7 +42,10 @@ public class PlayerStats : MonoBehaviour
     public float JumpPower { get { return jumpPower; } }
 
 
-
+    public void Start()
+    {
+        GameManager = GameObject.Find("GameManager");
+    }
 
     public void Heal(float health)
     {
@@ -53,6 +57,12 @@ public class PlayerStats : MonoBehaviour
     {
         health -= dmg;
         ClampHealth();
+
+        if (Health == 0)
+        {
+            // gameover
+            GameManager.SendMessage("GameOver");
+        }
     }
 
     public void AddHealth()
