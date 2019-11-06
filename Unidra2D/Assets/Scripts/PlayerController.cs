@@ -106,6 +106,7 @@ public class PlayerController : MonoBehaviour
             PlayerStats.Instance.TakeDamage(1);
 
             //피격 효과음 출력
+            GameObject.Find("HitSound").GetComponent<AudioSource>().Play();
         }
     }
 

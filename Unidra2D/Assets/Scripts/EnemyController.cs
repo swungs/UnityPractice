@@ -4,11 +4,19 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
+    public Transform areaTopLeft;
+    public Transform areaBottomRight;
+    public GameObject firePrefab;
+    public float minTime = 2f;
+    public float maxTime = 5f;
+    int i = 1;
+
     IEnumerator Attack()
     {
         // 위치 랜덤
         // 이동 시간 랜덤
         // 불덩이 개수 1개
+        int fireNum = Random.Range(4, 5);
 
         // 현재 위치를 from_position에, areaTopLeft~areaBottomRight 사이의 랜덤한 좌표를 to_position에 저장
         Vector3 from_position = transform.position;
@@ -55,21 +63,11 @@ public class EnemyController : MonoBehaviour
     }
 
     void Start()
-    {
+    { 
         StartCoroutine(Attack());
     }
 
-    // Start is called before the first frame update
-    void Awake()
-    {
-        public Transform areaTopLeft;
-        public Transform areaBottomRight;
-        public GameObject firePrefab;
-        public float minTime = 2f;
-        public float maxTime = 5f;
-        int i = 1;
-        int fireNum = Random.Range(4, 5);
-    }
-
 }
+
+    
   

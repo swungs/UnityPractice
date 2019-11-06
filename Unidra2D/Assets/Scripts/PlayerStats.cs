@@ -33,7 +33,7 @@ public class PlayerStats : MonoBehaviour
     [SerializeField]
     private float moveSpeed = 5;// 이동 속도
     [SerializeField]
-    private float jumpPower = 1; // 점프 속도
+    private float jumpPower = 100; // 점프 속도
 
     public float Health { get { return health; } }
     public float MaxHealth { get { return maxHealth; } }
