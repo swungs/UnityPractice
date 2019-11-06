@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-
-    public Transform areaTopLeft;
-    public Transform areaBottomRight;
-    public GameObject firePrefab;
-    public float minTime = 0.2f;
-    public float maxTime = 5f;
-
     IEnumerator Attack()
     {
+        // 위치 랜덤
+        // 이동 시간 랜덤
+        // 불덩이 개수 1개
+
         // 현재 위치를 from_position에, areaTopLeft~areaBottomRight 사이의 랜덤한 좌표를 to_position에 저장
         Vector3 from_position = transform.position;
         Vector3 to_position = new Vector3(
@@ -24,6 +21,21 @@ public class EnemyController : MonoBehaviour
         float start_time = Time.time;
         float move_time = Random.Range(minTime, maxTime);
 
+        if (i <= fireNum)
+        {
+            minTime = 0.1f;
+            maxTime = 0.2f;
+            to_position = new Vector3(
+            Random.Range(transform.position.x - 1f, transform.position.x + 1f),
+            Random.Range(transform.position.y - 1f, transform.position.y + 1f),
+            transform.position.z);
+        }
+        else
+        {
+            fireNum = Random.Range(1, 5);
+            i = 1;
+        }
+
         // 이동 처리
         while (true)
         {
@@ -34,18 +46,30 @@ public class EnemyController : MonoBehaviour
             yield return null;
         }
 
-        // 불덩이 소환
         Instantiate(firePrefab, transform.position, Quaternion.identity);
+
+        // 이번 공격에서 생성될 불덩이 랜덤 1~4 결정
+        i++;
 
         StartCoroutine(Attack());
     }
 
-
-    // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(Attack());
     }
-}
 
+    // Start is called before the first frame update
+    void Awake()
+    {
+        public Transform areaTopLeft;
+        public Transform areaBottomRight;
+        public GameObject firePrefab;
+        public float minTime = 2f;
+        public float maxTime = 5f;
+        int i = 1;
+        int fireNum = Random.Range(4, 5);
+    }
+
+}
   

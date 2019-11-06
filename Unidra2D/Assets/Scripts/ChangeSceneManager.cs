@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Threading;
 
 
 public class ChangeSceneManager : MonoBehaviour
@@ -19,9 +20,12 @@ public class ChangeSceneManager : MonoBehaviour
     }
 
     public void ChangeGameScene()
-    {
-        SceneManager.LoadScene("MainGame");
+    {     
         Time.timeScale = 1.0f;
+        DontDestroyOnLoad(GameObject.Find("Sounds"));
+        GameObject.Find("ButtonSound").GetComponent<AudioSource>().Play();
+
+        SceneManager.LoadScene("MainGame");
     }
 
 

@@ -7,7 +7,6 @@ public class PlayerController : MonoBehaviour
     bool grounded = false;      // 땅에 닿아 있는지 여부
     new Rigidbody2D rigidbody2D;
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -89,6 +88,9 @@ public class PlayerController : MonoBehaviour
             Vector2 jumpVelocity = new Vector2(0, PlayerStats.Instance.JumpPower);
             rigidbody2D.AddForce(jumpVelocity, ForceMode2D.Impulse);
 
+            //점프 효과음 출력
+            GameObject.Find("JumpSound").GetComponent<AudioSource>().Play();
+
             grounded = false;
         }
     }
@@ -102,6 +104,8 @@ public class PlayerController : MonoBehaviour
             myAnimator.SetTrigger("Damage");
 
             PlayerStats.Instance.TakeDamage(1);
+
+            //피격 효과음 출력
         }
     }
 
